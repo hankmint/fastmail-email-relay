@@ -1,0 +1,28 @@
+name: Send Email via Resend
+
+on:
+  workflow_dispatch:
+    inputs:
+      to:
+        description: 'Recipient email address'
+        required: true
+        type: string
+      subject:
+        description: 'Email subject'
+        required: true
+        type: string
+      body:
+        description: 'Email body (HTML supported)'
+        required: true
+        type: string
+
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send email via Resend API
+        run: |
+          curl -X POST https://api.resend.com/emails \
+            -H "Authorization: Bearer ${{ secrets.RESEND_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"from":"Nana - Knod AI <nana@knod.ai>","to":["${{ inputs.to }}"],"subject":"${{ inputs.subject }}","html":"${{ inputs.body }}"}'
